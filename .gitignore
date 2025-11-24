@@ -1,0 +1,17 @@
+# Entorno virtual (¡La carpeta que no quieres subir!)
+.envs/
+
+# Archivo de variables de entorno (¡Nunca subir contraseñas!)
+.env
+
+# Base de datos local
+db.sqlite3
+*.sqlite3
+
+# Archivos de Python compilados
+*.pyc
+__pycache__/
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
