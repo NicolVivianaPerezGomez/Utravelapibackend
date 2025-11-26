@@ -30,13 +30,13 @@ class CiudadRepository:
     
     #eliminar lógico ciudad
     def desactivate(self, id:int) -> bool:
-        deleted: Ciudad.objects.filter(pk=id).update(ciudad_status="0")
+        deleted = Ciudad.objects.filter(pk=id).update(ciudad_status="0")
         return deleted > 0
     
     #listar todas las ciudades
     def listCiudades(self) -> QuerySet[Ciudad]:
         return(
-            self.model.objects.all()
+            self.model.objects.filter(ciudad_status="1") #solo listar las que esten activas
         )
     
     #listar para

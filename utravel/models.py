@@ -12,7 +12,8 @@ class TipoUsuario(models.Model):
 
 class Ciudad(models.Model):
     ciu_id = models.AutoField(primary_key=True)
-    ciu_descripcion = models.CharField(max_length=200)
+    ciu_descripcion = models.CharField(max_length=200, unique=True)
+    ciudad_status = models.IntegerField(default=1)
 
     def __str__(self):
         return self.ciu_descripcion

@@ -32,7 +32,7 @@ class TipoUsuarioAdmin(admin.ModelAdmin):
 @admin.register(Ciudad)
 class CiudadAdmin(admin.ModelAdmin):
     search_fields = ("ciu_descripcion",)
-    list_display = ("ciu_id", "ciu_descripcion")
+    list_display = ("ciu_id", "ciu_descripcion", "ciudad_status")
 
 
 @admin.register(CategoriaLugar)
