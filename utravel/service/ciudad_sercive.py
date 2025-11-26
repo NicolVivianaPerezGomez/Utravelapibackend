@@ -46,7 +46,6 @@ class CiudadService:
     #UPDATE
     def update_ciudad(self, id:int, **data) -> Optional[Ciudad]:
 
-        #validar que el nombre/descripción no exista
         name = data.get("ciu_descripcion") #trayendo dato del diccionario con clave: ciu_descripcion
         status = data.get("ciudad_status")
 
@@ -54,17 +53,17 @@ class CiudadService:
         if status != "1":
             raise ValueError("El registro está inactivo. No se puede actualizar")
 
-        #validar nombre/descripcion único
+        #validar nombre/descripcion existente
         if name and self.repository.get_by_name(name): #si la info de la ciudad y en la bd ya existe un registro igual
             raise ValueError("Ya existe una ciudad registrada con ese nombre")
         
         return self.repository.update(id, **data)
     
     #DELETE LÓGICO
-    def desactivate(self, id: int) -> bool:
+    def desactivate_ciudad(self, id: int) -> bool:
         obj = self.repository.get_by_id(id)
 
-        if not obj:
+        if not obj: #no existe el registro/objeto
             return False
         
         return self.repository.desactivate(id)

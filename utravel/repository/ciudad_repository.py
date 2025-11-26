@@ -7,7 +7,6 @@ class CiudadRepository:
     #Declarando una referencia a la clase no al objeto
     model = Ciudad
 
-
     #crear una ciudad
     def create(self, **data) -> Ciudad: #recibir todos los datos por medio de un diccionario
         return Ciudad.objects.create(**data) #Crear una nueva ciudad, objects.create() viene del ORM Django crea un neuvo registro en la bd
@@ -31,7 +30,7 @@ class CiudadRepository:
     #eliminar lógico ciudad
     def desactivate(self, id:int) -> bool:
         deleted = Ciudad.objects.filter(pk=id).update(ciudad_status="0")
-        return deleted > 0
+        return deleted > 0 #retorna True o False si un registro fue actualizado por eso > 0
     
     #listar todas las ciudades
     def listCiudades(self) -> QuerySet[Ciudad]:
