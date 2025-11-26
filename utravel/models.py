@@ -45,6 +45,7 @@ class Usuario(models.Model):
 class TipoExperiencia(models.Model):
     tipexp_id = models.AutoField(primary_key=True)
     tipexp_descripcion = models.CharField(max_length=200)
+    tipexp_status = models.CharField(max_length=1, default="1")
 
     def __str__(self):
         return self.tipexp_descripcion

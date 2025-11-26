@@ -51,7 +51,7 @@ class UsuarioAdmin(admin.ModelAdmin):
 @admin.register(TipoExperiencia)
 class TipoExperienciaAdmin(admin.ModelAdmin):
     search_fields = ("tipexp_descripcion",)
-    list_display = ("tipexp_id", "tipexp_descripcion")
+    list_display = ("tipexp_id", "tipexp_descripcion", "tipexp_status")
 
 
 @admin.register(PreferenciaUsuario)
