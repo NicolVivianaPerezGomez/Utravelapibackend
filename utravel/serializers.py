@@ -14,7 +14,7 @@ class RutaTuristicaSerializer(serializers.ModelSerializer):
             rut_nombre=value,
             rut_estado="1"
         )
-        # cuando instance es None, es creación; si existe ruta activa con ese nombre, fallar
+
         if queryset.exists() and self.instance is None:
             raise serializers.ValidationError("Ya existe una ruta con este nombre.")
         return value
