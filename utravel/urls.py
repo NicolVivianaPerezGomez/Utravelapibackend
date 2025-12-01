@@ -1,16 +1,10 @@
 from django.urls import path
-from .views import (
-    listar_rutas,
-    crear_ruta,
-    obtener_ruta,
-    actualizar_ruta,
-    eliminar_ruta
-)
+from . import views
 
 urlpatterns = [
-    path("rutas/", listar_rutas, name="listar_rutas"),
-    path("rutas/crear/", crear_ruta, name="crear_ruta"),
-    path("rutas/<int:id>/", obtener_ruta, name="obtener_ruta"),
-    path("rutas/<int:id>/actualizar/", actualizar_ruta, name="actualizar_ruta"),
-    path("rutas/<int:id>/eliminar/", eliminar_ruta, name="eliminar_ruta"),
+    path('rutas/', views.listar_rutas, name='listar_rutas'),
+    path('rutas/crear/', views.crear_ruta, name='crear_ruta'),
+    path('rutas/<int:id>/', views.obtener_ruta, name='obtener_ruta'),
+    path('rutas/<int:id>/actualizar/', views.actualizar_ruta, name='actualizar_ruta'),
+    path('rutas/<int:id>/eliminar/', views.eliminar_ruta, name='eliminar_ruta'),
 ]
