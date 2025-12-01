@@ -89,6 +89,7 @@ class RutaTuristica(models.Model):
     rut_nombre = models.CharField(max_length=150)
     rut_descripcion = models.TextField()
     rut_duracion = models.CharField(max_length=100)
+    rut_estado = models.CharField(max_length=1, default="1") 
 
     def __str__(self):
         return self.rut_nombre
