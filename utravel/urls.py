@@ -8,3 +8,4 @@ urlpatterns = [
     path('rutas/<int:id>/actualizar/', views.actualizar_ruta, name='actualizar_ruta'),
     path('rutas/<int:id>/eliminar/', views.eliminar_ruta, name='eliminar_ruta'),
 ]
+
