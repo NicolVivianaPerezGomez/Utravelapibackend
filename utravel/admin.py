@@ -62,9 +62,9 @@ class PreferenciaUsuarioAdmin(admin.ModelAdmin):
 
 @admin.register(Lugares)
 class LugaresAdmin(admin.ModelAdmin):
-    list_display = ("lug_id", "lug_nombre", "ciu_id", "catlug_id")
-    search_fields = ("lug_nombre", "lug_descripcion")
-    list_filter = ("ciu_id", "catlug_id")
+    list_display = ("lug_id", "lug_nombre", "lug_ubicacion", "lug_latitud", "lug_longitud","lug_status", "ciu_id", "catlug_id")
+    search_fields = ("lug_nombre", "lug_descripcion","lug_ubicacion")
+    list_filter = ("ciu_id", "catlug_id", "lug_status")
     inlines = [ReseñaInline]
 
 

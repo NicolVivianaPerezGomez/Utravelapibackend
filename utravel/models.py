@@ -65,12 +65,14 @@ class Lugares(models.Model):
     lug_nombre = models.CharField(max_length=100)
     lug_descripcion = models.CharField(max_length=300)
     lug_ubicacion = models.CharField(max_length=200)
+    lug_latitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lug_longitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
+    lug_status = models.CharField(max_length=1, default="1")
     catlug_id = models.ForeignKey(CategoriaLugar, on_delete=models.CASCADE)
     ciu_id = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
-
+    
     def __str__(self):
         return self.lug_nombre
-
 
 class CiudadLugares(models.Model):
     ciulug_id = models.AutoField(primary_key=True)
