@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from utravel.api.usuario_api import UsuarioApi
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('usuarios/', UsuarioApi.as_view(), name='usuarios-list-create'),
+    path('usuarios/<int:id>/', UsuarioApi.as_view(), name='usuarios-detail'),
 ]

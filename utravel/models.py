@@ -35,6 +35,7 @@ class Usuario(models.Model):
     usu_correo = models.EmailField(unique=True)
     usu_contraseña = models.CharField(max_length=100)
     usu_usunombre = models.CharField(max_length=100, unique=True)
+    usu_status = models.CharField(max_length=1, default="1")
     ciu_id = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
     tipousu_id = models.ForeignKey(TipoUsuario, on_delete=models.CASCADE)
 
