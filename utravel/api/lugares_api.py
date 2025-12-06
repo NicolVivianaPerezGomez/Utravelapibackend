@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from utravel.api.serializars_lugares import LugaresSerializer
+from utravel.api.serializers.serializars_lugares import LugaresSerializer
 from utravel.service.lugares_service import LugaresServices
 
 
