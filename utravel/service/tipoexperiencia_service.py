@@ -2,6 +2,7 @@ from django.db.models import QuerySet
 from typing import Optional
 from utravel.models import TipoExperiencia
 from utravel.repository.tipoexperiencia_repository import TipoExperienciaRepository
+import re #para expresiones regulares
 
 class TipoExperienciaService:
 
@@ -44,16 +45,33 @@ class TipoExperienciaService:
     #Update
     def update_tpexp(self, id:int, **data) -> Optional[TipoExperiencia]:
 
+        experiencia = self.repository.get_by_id(id)
         name = data.get("tipexp_descripcion")
         status = data.get("tipexp_status")
+
+        #validad si existe la experiencia
+        if not experiencia:
+            raise ValueError("Experiencia no econtrada, no es posible actualizar")
 
         #validar que el status sea 1
         if status != "1":
             raise ValueError("El registro esta inactivo, no se puede Actualizar")
         
-        #Validar nombre/descripción existente
-        if name and self.repository.get_by_name(name):
-            raise ValueError("Ya existe un Tipo de experiencia con ese nombre")
+        #Validar nombre/descripción único
+        if name and name != experiencia.repository.tipexp_descripcion:
+            existing = self.repository.get_by_name(name)
+
+            if existing:
+                raise ValueError("Ya existe un Tipo de experiencia con ese nombre")
+
+        #validación de expreisiones regulares
+        if name:
+            if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]+", name):
+                raise ValueError("El nombre de la experiencia solo puede contener letras y espacios")
+            
+        #Establecer status
+        if status is None:
+            data["tipexp_status"] = experiencia.tipexp_status #si no hay calor nuevo dejar el que ya tenia
         
         return self.repository.update(id, **data)
     

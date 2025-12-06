@@ -2,19 +2,19 @@ from typing import Optional
 from utravel.repository.ciudad_repository import CiudadRepository
 from utravel.models import Ciudad
 from django.db.models import QuerySet
+import re #para expresiones regulares
 
 class CiudadService:
 
     #Contructor con inyeción del repository de ciudad con none = no retorna nada
     def __init__(self, repository: Optional[CiudadRepository] = None) -> None:
 
-        self.repository = repository or CiudadRepository #Si no me pasan un repository instancio uno
+        self.repository = repository or CiudadRepository() #Si no me pasan un repository instancio uno
 
-    
     #Consultas de lectura ---------------------------------
 
     #listar todas las ciudades
-    def list_ciudades(self) -> QuerySet[Ciudad]:
+    def list_ciudades(self) -> QuerySet[Ciudad]: #QuerySet devuelve una lista de ciudades
         return self.repository.listCiudades() #método del repository
     
     #listar por ID
@@ -33,6 +33,11 @@ class CiudadService:
         #validar que el nombre/descripción no exista
         name = data.get("ciu_descripcion") #trayendo dato del diccionario con clave: ciu_descripcion
 
+        #validación de expreisiones regulares
+        if name:
+            if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]+", name):
+                raise ValueError("El nombre de la ciudad solo puede contener letras y espacios")
+
         #validar nombre/descripcion único
         if name and self.repository.get_by_name(name): #si la info de la ciudad y en la bd ya existe un registro igual
             raise ValueError("Ya existe una ciudad registrada con ese nombre") #Exepción
@@ -46,16 +51,33 @@ class CiudadService:
     #UPDATE
     def update_ciudad(self, id:int, **data) -> Optional[Ciudad]:
 
+        ciudad = self.repository.get_by_id(id) #traer la ciudad
         name = data.get("ciu_descripcion") #trayendo dato del diccionario con clave: ciu_descripcion
         status = data.get("ciudad_status")
+
+        #validar que exista ciudad
+        if not ciudad: #si existe
+            raise ValueError("Ciudad no encontrada, no es posible actualizar")
 
         #validar que el status sea 1
         if status != "1":
             raise ValueError("El registro está inactivo. No se puede actualizar")
+        
+        #validar nombre/descripcion (único)
+        if name and name != ciudad.ciu_descripcion: #si la info de la ciudad y en la bd ya existe un registro igual
+            existing = self.repository.get_by_name(name)
+            if existing:
+                raise ValueError("Ya existe una ciudad registrada con ese nombre")
 
-        #validar nombre/descripcion existente
-        if name and self.repository.get_by_name(name): #si la info de la ciudad y en la bd ya existe un registro igual
-            raise ValueError("Ya existe una ciudad registrada con ese nombre")
+        #validación de expreisiones regulares
+        if name:
+            if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]+", name):
+                raise ValueError("El nombre de la ciudad solo puede contener letras y espacios")
+            
+        #Establecer status
+        if status is None:
+            data["ciudad_status"] = ciudad.ciudad_status #si no hay calor nuevo dejar el que ya tenia
+
         
         return self.repository.update(id, **data)
     
