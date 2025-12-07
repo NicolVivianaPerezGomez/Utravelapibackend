@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.urls import path, include
-from . import views
 
 # Importaciones de tus APIs
 from utravel.api.lugares_api import LugaresApiLC, LugaresDetailApi
@@ -39,12 +38,6 @@ urlpatterns = [
     path('tipo_exp/<int:id>/', TExperienciaApiDetailId.as_view(), name='tipoexperiencias-details'), #Actulizar, desactivar y filtrar por id
     path('tipo_exp/<str:name>/', TExperienciaApiDetailName.as_view(), name='tipoexperiencias-names'), #filtrar por nombre 
 
-    # API RUTAS TURÍSTICAS 
-    path('api/utravel/rutas/', views.listar_rutas, name='listar_rutas'),
-    path('api/utravel/rutas/crear/', views.crear_ruta, name='crear_ruta'),
-    path('api/utravel/rutas/<int:id>/', views.obtener_ruta, name='obtener_ruta'),
-    path('api/utravel/rutas/<int:id>/actualizar/', views.actualizar_ruta, name='actualizar_ruta'),
-    path('api/utravel/rutas/<int:id>/eliminar/', views.eliminar_ruta, name='eliminar_ruta'),
 ]
 
 # Rutas adicionales 
