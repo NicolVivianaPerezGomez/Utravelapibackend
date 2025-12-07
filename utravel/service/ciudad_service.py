@@ -30,21 +30,26 @@ class CiudadService:
     #CREATE
     def create_ciudad(self, **data) -> Ciudad:
 
-        #validar que el nombre/descripción no exista
         name = data.get("ciu_descripcion") #trayendo dato del diccionario con clave: ciu_descripcion
+        existing = self.repository.get_by_name(name)
 
+        #validar que este activo
+        if existing and existing.ciudad_status == 1:
+            raise ValueError("Ya existe una ciudad con ese nombre")
+        
+        #Reactivar si esta inactivo
+        if existing and existing.ciudad_status == 0:
+            existing.ciudad_status = 1
+            return self.repository.update(existing.id, **data)
+        
         #validación de expreisiones regulares
         if name:
             if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]+", name):
                 raise ValueError("El nombre de la ciudad solo puede contener letras y espacios")
-
-        #validar nombre/descripcion único
-        if name and self.repository.get_by_name(name): #si la info de la ciudad y en la bd ya existe un registro igual
-            raise ValueError("Ya existe una ciudad registrada con ese nombre") #Exepción
-        
-        #Estado por default
+            
+        #Estado por default del status
         data.setdefault("ciudad_status", 1)
-
+        
         #Creación de la ciudad
         return self.repository.create(**data)
     

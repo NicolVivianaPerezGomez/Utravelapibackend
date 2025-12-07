@@ -9,7 +9,7 @@ class TipoExperienciaService:
    #Creando el constructor y haciendo inyección del repositorio
     def __init__(self, repository: Optional[TipoExperienciaRepository] = None) -> None:
 
-        self.repository = repository or TipoExperienciaRepository #Si no me pasan en repository instancio uno
+        self.repository = repository or TipoExperienciaRepository() #Si no me pasan en repository instancio uno
 
     #CONSULTAS DE LECTURA ------------------------
 
@@ -31,10 +31,21 @@ class TipoExperienciaService:
     def create_tpexp(self, **data) -> TipoExperiencia:
 
         name = data.get("tipexp_descripcion")
+        existing = self.repository.get_by_name(name)
 
-        #Validar nombre/descripción existente
-        if name and self.repository.get_by_name(name):
-            raise ValueError("Ya existe un Tipo de experiencia con ese nombre")
+        #validar que este activo
+        if existing and existing.tipexp_status == 1:
+            raise ValueError("Ya existe un tipo de experiencia con ese nombre")
+        
+        #Reactivar si esta inactivo
+        if existing and existing.tipexp_status == 0:
+            existing.tipexp_status = 1
+            return self.repository.update(existing.id, **data)
+
+        #validación de expreisiones regulares
+        if name:
+            if not re.fullmatch(r"[A-Za-zÁÉÍÓÚáéíóúÑñ ]+", name):
+                raise ValueError("El nombre de la experiencia solo puede contener letras y espacios")
         
         #Estado por default
         data.setdefault("tipexp_status", 1)
@@ -58,7 +69,7 @@ class TipoExperienciaService:
             raise ValueError("El registro esta inactivo, no se puede Actualizar")
         
         #Validar nombre/descripción único
-        if name and name != experiencia.repository.tipexp_descripcion:
+        if name and name != experiencia.tipexp_descripcion:
             existing = self.repository.get_by_name(name)
 
             if existing:

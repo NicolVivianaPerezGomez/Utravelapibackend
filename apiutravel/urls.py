@@ -5,6 +5,7 @@ from django.urls import path, include
 from utravel.api.lugares_api import LugaresApiLC, LugaresDetailApi
 from utravel.api.usuario_api import UsuarioApi
 from utravel.api.ciudad_api import CiudadesApi, CiudadApiDetailName, CiudadApiDetailId
+from utravel.api.tipoexperiencia_api import TExperienciaApi, TExperienciaApiDetailId, TExperienciaApiDetailName
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,6 +22,12 @@ urlpatterns = [
     path('ciudades/', CiudadesApi.as_view(), name='ciudades-all-create'), #listar y crear
     path('ciudades/<int:id>/', CiudadApiDetailId.as_view(), name='ciudades-details'), #Actulizar, desactivar y filtrar por id
     path('ciudades/<str:name>/', CiudadApiDetailName.as_view(), name='ciudades-names'), #filtrar por nombre 
+
+    #Rutas de Tipo de experiencia 
+    path('tipo_exp/', TExperienciaApi.as_view(), name='tipoexperiencias-all-create'), #listar y crear
+    path('tipo_exp/<int:id>/', TExperienciaApiDetailId.as_view(), name='tipoexperiencias-details'), #Actulizar, desactivar y filtrar por id
+    path('tipo_exp/<str:name>/', TExperienciaApiDetailName.as_view(), name='tipoexperiencias-names'), #filtrar por nombre 
+
 ]
 
 # Rutas adicionales 

@@ -16,39 +16,37 @@ class CiudadesApi(APIView):
     #METODO PARA RETORNAR/ENVIAR TODAS LAS CIUDADES
     def get(self, request):
         ciudades = self.service.list_ciudades() #trayendo el metodo de listar
-        serializer = CiudadesSerializer(ciudades, many=True) #instancia de seriallizer con ciudades
+        serializer = CiudadesSerializer(ciudades, many=True) #many: procesa una lista de objetos no solo uno, serializer: el que valida y pasa a JSON
         return Response(serializer.data, status=status.HTTP_200_OK) #Respuesta del API con dara serializada: información con status ok
     
     #METODO PARA CREAR
     def post(self, request):
         
-        serializer = CiudadesSerializer(data=request.data) #traengo métood crear
+        serializer = CiudadesSerializer(data=request.data) #datos serializados enviados por el cliente
 
         if not serializer.is_valid(): #is_valid() ejecuta las validaciones necesarias
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) #devuelve que campos estan mal
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) #devuelve que campos/validaciones estan mal
         
         try:
             ciudad = self.service.create_ciudad(**serializer.validated_data) #Crear con un diccioanrio "**" con la información validada
         except ValueError as e:
-
-            #Reglas de negocio
-            return Response({"detail": str(e)}, status=status.HTTP_404_BAD_REQUEST)
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
         out_serializer = CiudadesSerializer(ciudad) #Serializer para convertir a JSON
         return Response(out_serializer.data, status=status.HTTP_201_CREATED) #enviar datos creados al cliente
     
 
-#USAR CON EL ID
+#BUSAR CON EL ID
 class CiudadApiDetailId(APIView):
 
-    service = CiudadService();
+    service = CiudadService()
 
-    #FILTRAR POR NOMBRE
+    #GET POR ID
     #traer el objeto por nombre
     def get_object_id(self, id):
         return self.service.get_ciudad_id(id)
 
-    #método de validar y enviar
+    #método de validar y enviar al cliente
     def get(self, request, id: int):
         ciudad = self.get_object_id(id)
 
@@ -58,13 +56,13 @@ class CiudadApiDetailId(APIView):
         serializer = CiudadesSerializer(ciudad) #serializar (validar y transformar)
         return Response(serializer.data, status=status.HTTP_200_OK) #enviar al cliente
     
-    #MÉTODO PARA ENVIAR 
+    #MÉTODO PARA ACTUALIZAR
     def put(self, request, id:int):
 
         ciudad = self.service.get_ciudad_id(id)
 
         if not ciudad:
-            return Response({"detail": "cliente no encontrado."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "cliente no encontrado para actualizar."}, status=status.HTTP_404_NOT_FOUND)
         
         #pasar instancia al seriallizer
         serializer = CiudadesSerializer(ciudad, data=request.data) #request representa toda la info que envia el cliente al servidor
@@ -87,7 +85,7 @@ class CiudadApiDetailId(APIView):
         deleted = self.service.desactivate_ciudad(id)
 
         if not deleted: #si no existe
-            return Response({"detail:" "Cliente no encontrado."},
+            return Response({"detail:" "CIudad no encontrada."},
                             status=status.HTTP_404_NOT_FOUND)
         
         #retorno al cliente 
