@@ -65,7 +65,7 @@ class CiudadService:
             raise ValueError("Ciudad no encontrada, no es posible actualizar")
 
         #validar que el status sea 1
-        if status != "1":
+        if ciudad.ciudad_status != "1":
             raise ValueError("El registro está inactivo. No se puede actualizar")
         
         #validar nombre/descripcion (único)

@@ -65,7 +65,7 @@ class TipoExperienciaService:
             raise ValueError("Experiencia no econtrada, no es posible actualizar")
 
         #validar que el status sea 1
-        if status != "1":
+        if experiencia.tipexp_status != "1":
             raise ValueError("El registro esta inactivo, no se puede Actualizar")
         
         #Validar nombre/descripción único

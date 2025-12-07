@@ -74,13 +74,13 @@ class CiudadApiDetailId(APIView):
         serializer = CiudadesSerializer(ciudad, data=request.data) #request representa toda la info que envia el cliente al servidor
 
         if not serializer.is_valid(): #las validaciones son incorrectas
-            return Response(serializer.errors, status=status.HTTP_404_BAD_REQUEST) #devuelve que campos estan mal
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) #devuelve que campos estan mal
         
         try:
             updated = self.service.update_ciudad(id, **serializer.validated_data) #actualziar info con el dicionario de la info validada
 
         except ValueError as e:
-            return Response({"detail": str(e)}, status=status.HTTP_404_BAD_REQUEST)
+            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
         out_serializer = CiudadesSerializer(updated) #convertir a JSON
 
