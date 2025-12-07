@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.permissions import IsAuthenticated #autenticación JWT
 from utravel.api.serializers.serializer_tipoexperiencia import TipoExperienciaSerializer
 from utravel.service.tipoexperiencia_service import TipoExperienciaService
 
@@ -10,8 +10,10 @@ from utravel.service.tipoexperiencia_service import TipoExperienciaService
 
 class TExperienciaApi(APIView):
 
-    #instanciando TipoExperienciaService
+    #dar permisos 
+    permission_classes = [IsAuthenticated]
 
+    #instanciando TipoExperienciaService
     service = TipoExperienciaService()
 
     #METODO PARA OBTENER LOS TIPOS DE EXPERIENCIA
@@ -38,6 +40,9 @@ class TExperienciaApi(APIView):
 
 #Buscar por el ID
 class TExperienciaApiDetailId(APIView):
+
+    #dar permisos 
+    permission_classes = [IsAuthenticated]
 
     service = TipoExperienciaService()
 
@@ -91,6 +96,9 @@ class TExperienciaApiDetailId(APIView):
         
 #FILTRAR POR NOMBRE
 class TExperienciaApiDetailName(APIView):
+
+    #dar permisos 
+    permission_classes = [IsAuthenticated]
 
     service = TipoExperienciaService()
 

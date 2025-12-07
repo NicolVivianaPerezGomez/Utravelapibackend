@@ -7,7 +7,17 @@ from utravel.api.usuario_api import UsuarioApi
 from utravel.api.ciudad_api import CiudadesApi, CiudadApiDetailName, CiudadApiDetailId
 from utravel.api.tipoexperiencia_api import TExperienciaApi, TExperienciaApiDetailId, TExperienciaApiDetailName
 
+#JWT importaciones
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+
 urlpatterns = [
+
+    #JWT
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), #Pedir tokens 
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    #Admin
     path('admin/', admin.site.urls),
 
     # Rutas lugares
@@ -35,3 +45,9 @@ urlpatterns += [
     path('api/utravel/', include('utravel.urls')),
 ]
 
+#Usuario para pedir tokens
+""" {
+        "username": "root",
+        "password":"1234"
+    }
+""" 

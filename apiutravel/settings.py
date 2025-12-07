@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 #from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -140,5 +141,9 @@ REST_FRAMEWORK = {
      
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+}
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Token de acceso dura 60 minutos
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Refresh token dura 7 días
 }

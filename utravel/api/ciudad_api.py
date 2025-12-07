@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.permissions import IsAuthenticated #autenticación JWT
 from utravel.api.serializers.serializer_ciudades import CiudadesSerializer
 from utravel.service.ciudad_service import CiudadService
 
@@ -9,6 +9,9 @@ from utravel.service.ciudad_service import CiudadService
 # y envia datos al cliente
 
 class CiudadesApi(APIView):
+
+    #dar permisos 
+    permission_classes = [IsAuthenticated]
 
     #instanciando CiudadService
     service = CiudadService()
@@ -38,6 +41,9 @@ class CiudadesApi(APIView):
 
 #BUSAR CON EL ID
 class CiudadApiDetailId(APIView):
+
+    #dar permisos 
+    permission_classes = [IsAuthenticated]
 
     service = CiudadService()
 
@@ -94,6 +100,9 @@ class CiudadApiDetailId(APIView):
 
 #FILTRAR POR NOMBRE
 class CiudadApiDetailName(APIView):
+
+    #dar permisos 
+    permission_classes = [IsAuthenticated]
 
     service = CiudadService();
 
