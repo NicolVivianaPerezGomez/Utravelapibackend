@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import RutaTuristica
+from ...models import RutaTuristica
 
 
 class RutaTuristicaSerializer(serializers.ModelSerializer):

@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 
 from .models import RutaTuristica
-from .serializers import RutaTuristicaSerializer
+from .api.serializers.serializers_rutas import RutaTuristicaSerializer
 
 
 @api_view(['GET'])
