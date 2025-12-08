@@ -24,5 +24,6 @@ class LugaresSerializer(serializers.ModelSerializer):
             "lug_longitud",
             "lug_status",
             "catlug_id",
-            "ciu_id",   
+            "ciu_id", 
+            "lug_imagen",  
         ]

@@ -69,6 +69,7 @@ class Lugares(models.Model):
     lug_latitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     lug_longitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     lug_status = models.CharField(max_length=1, default="1")
+    lug_imagen = models.ImageField(upload_to='lugares/', null=True, blank=True)
     catlug_id = models.ForeignKey(CategoriaLugar, on_delete=models.CASCADE)
     ciu_id = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
     
