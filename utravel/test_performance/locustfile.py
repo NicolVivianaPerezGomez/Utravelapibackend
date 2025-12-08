@@ -75,3 +75,13 @@ class CiudadSimulada(HttpUser):
         self.client.get("/ciudades/Bogot%C3%A1/", headers=self.headers)
 
 
+"""
+Como ejecutar:
+
+correr servido: py manage.py runserver
+buscar en la terminar la carpeta test_performance
+ejecutar locust -f locustfile.py --host=http://127.0.0.1:8000
+abrir en la web http://localhost:8089
+ejecutar prueba
+
+"""
