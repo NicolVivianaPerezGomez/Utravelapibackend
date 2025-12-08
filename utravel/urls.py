@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from .service import views
 
 urlpatterns = [
     path('rutas/', views.listar_rutas, name='listar_rutas'),
