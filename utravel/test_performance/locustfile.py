@@ -11,6 +11,8 @@ pesos:
 1 = se ejecuta menos veces cada x tiempo
 """
 
+TOKEN_GLOBAL = None
+
 class CiudadSimulada(HttpUser):
 
     wait_time = between(1,3) #tiempo de espera entre peticiones del usuario (crear, editar, listar)
@@ -20,24 +22,23 @@ class CiudadSimulada(HttpUser):
     #método para generar JWT
     def on_start(self):
 
-        self.token = None #declaracion vacia
-        self.headers = {} #declaracion vacia
+      global TOKEN_GLOBAL
 
-        #obtener token
-        response = self.client.post("/api/token/", json={ 
-            "username": "root",
-            "password": "1234"
-        })
+      if TOKEN_GLOBAL is None:
+          response = self.client.post("/api/token/", json={
+              "username": "root",
+              "password": "1234"
+          })
 
-        #detener si no se obtiene token
-        if response.status_code != 200:
-            print("ERROR TOKEN: ", response.status_code, response.text)
-            return
-        
-        #Guardar el token para futuras peticiones
-        self.token = response.json().get("access") #se accede al acces (token generado)
-        self.headers = {"Authorization": f"Bearer {self.token}"} #se gurada en un diccionario
-
+          if response.status_code == 200:
+              TOKEN_GLOBAL = response.json().get("access")
+              print("TOKEN GENERADO OK")
+          else:
+              print("ERROR TOKEN: ", response.status_code, response.text)
+              return
+    
+      self.headers = {"Authorization": f"Bearer {TOKEN_GLOBAL}"}
+ 
     @task(3)
     def listar(self):
         self.client.get("/ciudades/", headers=self.headers)
