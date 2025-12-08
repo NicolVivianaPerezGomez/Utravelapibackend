@@ -45,8 +45,8 @@ class LugaresRepository:
     
     """ 5. Retornar lugar por id """
     def get_by_id(self, id: int) -> Optional[Lugares]:
-        return self.model.objects.filter(pk=id, lug_status="1").select_related('catlug_id', 'ciu_id').first()
-    
+        return self.model.objects.filter(pk=id).select_related('catlug_id', 'ciu_id').first()
+
     """ 6. Retornar lugar por nombre """
     def get_by_name(self, name: str) -> Optional[Lugares]:
         return self.model.objects.filter(lug_nombre=name, lug_status="1").select_related('catlug_id', 'ciu_id').first()
