@@ -12,6 +12,10 @@ class LugaresSerializer(serializers.ModelSerializer):
         queryset=Ciudad.objects.all()
     )
 
+    lug_imagen = serializers.ImageField(
+        required=False, allow_null=True
+    )
+
     """ Campos que nececito """
     class Meta:
         model = Lugares

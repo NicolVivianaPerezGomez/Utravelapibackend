@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import format_html
 # Register your models here
 from .models import (
     TipoUsuario, Ciudad, CategoriaLugar, Usuario, TipoExperiencia,
@@ -62,10 +63,19 @@ class PreferenciaUsuarioAdmin(admin.ModelAdmin):
 
 @admin.register(Lugares)
 class LugaresAdmin(admin.ModelAdmin):
-    list_display = ("lug_id", "lug_nombre", "lug_ubicacion", "lug_latitud", "lug_longitud","lug_status", "ciu_id", "catlug_id")
+    list_display = ("lug_id", "lug_nombre", "lug_ubicacion", "lug_latitud", "lug_longitud","lug_status", "mostrar_imagen", "ciu_id", "catlug_id")
     search_fields = ("lug_nombre", "lug_descripcion","lug_ubicacion")
     list_filter = ("ciu_id", "catlug_id", "lug_status")
     inlines = [ReseñaInline]
+    def mostrar_imagen(self, obj):
+        if obj.lug_imagen:
+            return format_html(
+                '<img src="{}" width="80" height="80" style="object-fit: cover; border-radius: 6px;" />',
+                obj.lug_imagen.url
+            )
+        return "Sin imagen"
+
+    mostrar_imagen.short_description = "Imagen"
 
 
 @admin.register(CiudadLugares)

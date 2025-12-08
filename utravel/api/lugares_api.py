@@ -14,27 +14,23 @@ class LugaresApiLC(APIView):
     parser_classes = [MultiPartParser, FormParser]
     service = LugaresServices()
 
-    def get(self,request):
+    def get(self, request):
         lugares = self.service.list_lugares()
         serializer = LugaresSerializer(lugares, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    """ Metodo crear un nuevo lugar"""
+
     def post(self, request):
         serializer = LugaresSerializer(data=request.data)
+
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-        # Si esta bien se crea el lugar si no mandamos un 400
-        try:
-            lugar = self.service.create_lugares(**serializer.validated_data)
-        except ValueError as e:
-            # Reglas de negocio
-            return Response({"detail":str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
+
+        # Guarda imagen
+        lugar = serializer.save()
+
         out_serializer = LugaresSerializer(lugar)
         return Response(out_serializer.data, status=status.HTTP_201_CREATED)
-    
+
 
 class LugaresDetailApi(APIView):
     permission_classes = [IsAuthenticated]
@@ -54,25 +50,21 @@ class LugaresDetailApi(APIView):
         serializer = LugaresSerializer(lugares)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def put(self, request, id:int):
-        lugares = self.service.get_lugares_id(id)
-        if not lugares:
-            return Response ({"detail": "Lugar no encontrado"}, status=status.HTTP_404_NOT_FOUND)
-        
-        # Pasar instancia al serializer (clave)
-        serializer = LugaresSerializer(lugares, data=request.data, partial=True)
-        
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+    def put(self, request, id: int):
+        lugar = self.service.get_lugares_id(id)
+        if not lugar:
+            return Response({"detail": "Lugar no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = LugaresSerializer(lugar, data=request.data, partial=True)
+
         try:
-            update = self.service.update_lugares(id, **serializer.validated_data)
-        except ValueError as e:
-            # Reglas de negocio: Inactivo
-            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        
-        out_serializer = LugaresSerializer(update)
-        return Response(out_serializer.data, status=status.HTTP_200_OK)
+            serializer.is_valid(raise_exception=True)
+            updated_lugar = serializer.save()
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(LugaresSerializer(updated_lugar).data, status=status.HTTP_200_OK)
+
     
     def delete(self, request, id:int):
         deleted = self.service.deactivate_lugares(id)
