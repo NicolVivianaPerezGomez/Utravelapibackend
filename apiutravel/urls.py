@@ -7,6 +7,7 @@ from utravel.api.usuario_api import UsuarioApi
 from utravel.api.ciudad_api import CiudadesApi, CiudadApiDetailName, CiudadApiDetailId
 from utravel.api.tipoexperiencia_api import TExperienciaApi, TExperienciaApiDetailId, TExperienciaApiDetailName
 from utravel.api.rutas_api import RutaListCreateView, RutaRetrieveUpdateDestroyView
+from utravel.api.resena_api import ResenaApi, ResenaDetailId
 
 # JWT importaciones
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -49,6 +50,10 @@ urlpatterns = [
     path('api/utravel/rutas/<int:id>/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-detail'),
     path('api/utravel/rutas/<int:id>/actualizar/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-actualizar'),
     path('api/utravel/rutas/<int:id>/eliminar/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-eliminar'),
+
+    #Rutas de Reseña
+    path('resenas/', ResenaApi.as_view(), name='resenas-all-create'), #listar y crear
+    path('resenas/<int:id>/', ResenaDetailId.as_view(), name='tipoexperiencias-details'), #Actulizar, desactivar y filtrar por id
 
 ]
 
