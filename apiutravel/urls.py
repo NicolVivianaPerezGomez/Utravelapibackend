@@ -47,6 +47,9 @@ urlpatterns = [
     path('api/utravel/rutas/', RutaListCreateView.as_view(), name='rutas-list-create'),
     path('api/utravel/rutas/crear/', RutaListCreateView.as_view(), name='rutas-crear'),
     path('api/utravel/rutas/<int:id>/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-detail'),
+    path('api/utravel/rutas/<int:id>/actualizar/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-actualizar'),
+    path('api/utravel/rutas/<int:id>/eliminar/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-eliminar'),
+
 ]
 
 #Usuario para pedir tokens

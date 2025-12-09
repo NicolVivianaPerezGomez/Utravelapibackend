@@ -1,10 +1,3 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-
-from ..models import RutaTuristica
-from .serializers.serializers_rutas import RutaTuristicaSerializer
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -27,9 +20,11 @@ class RutaListCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
 class RutaRetrieveUpdateDestroyView(APIView):
 
-    lookup_field = "id"  
+    lookup_field = "id" 
 
     def get_object(self, id):
         try:
@@ -65,4 +60,5 @@ class RutaRetrieveUpdateDestroyView(APIView):
         ruta.rut_estado = "0"
         ruta.save()
         return Response({"mensaje": "Ruta desactivada correctamente"})
-        # return Response(status=status.HTTP_204_NO_CONTENT)
+
+
