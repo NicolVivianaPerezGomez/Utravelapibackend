@@ -235,62 +235,6 @@ class TipoExperienciaUser(HttpUser):
         self.client.get("/tipo_exp/Aventura/", headers=self.headers)
 
 
-# --- Usuarios Locust que prueban Rutas Turísticas ---
-class RutasUser(HttpUser):
-    wait_time = between(1, 3)
-    ruta_creada_id = None
-
-    def on_start(self):
-        global TOKEN_GLOBAL
-        self.headers = {}
-        if TOKEN_GLOBAL is None:
-            with TOKEN_LOCK:
-                if TOKEN_GLOBAL is None:
-                    response = self.client.post("/api/token/", json={
-                        "username": "root",
-                        "password": "1234"
-                    })
-                    if response.status_code == 200:
-                        TOKEN_GLOBAL = response.json().get("access")
-                        print("TOKEN GENERADO OK (RUTAS)")
-        self.headers = {"Authorization": f"Bearer {TOKEN_GLOBAL}"} if TOKEN_GLOBAL else {}
-
-    @task(3)
-    def listar_rutas(self):
-        self.client.get("/api/utravel/rutas/", headers=self.headers)
-
-    @task(1)
-    def crear_ruta(self):
-        payload = {
-            "rut_nombre": f"Ruta Locust {random.randint(10000, 99999)}",
-            "rut_descripcion": "Ruta creada en prueba de carga",
-            "rut_duracion": "2h"
-        }
-        response = self.client.post("/api/utravel/rutas/crear/", json=payload, headers=self.headers)
-        if response.status_code in (200, 201):
-            try:
-                self.ruta_creada_id = response.json().get("rut_id")
-            except:
-                pass
-
-    @task(1)
-    def obtener_ruta_aleatorio(self):
-        # Intenta obtener una ruta aleatoria (1-10)
-        ruta_id = random.randint(1, 10)
-        self.client.get(f"/api/utravel/rutas/{ruta_id}/", headers=self.headers)
-
-    @task(1)
-    def actualizar_ruta(self):
-        if self.ruta_creada_id:
-            payload = {
-                "rut_nombre": f"Ruta Actualizada {random.randint(10000, 99999)}",
-                "rut_descripcion": "Cambio de prueba",
-                "rut_duracion": "3h"
-            }
-            self.client.put(f"/api/utravel/rutas/{self.ruta_creada_id}/actualizar/", 
-                          json=payload, headers=self.headers)
-
-
 """
 CÓMO EJECUTAR LAS PRUEBAS DE CARGA CON LOCUST:
 
