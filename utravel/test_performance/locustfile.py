@@ -27,7 +27,7 @@ class CiudadSimulada(HttpUser): #HttpUser usuario virtual con peticion http
     def on_start(self):
         global TOKEN_GLOBAL
 
-        self.headers = {}
+        self.headers = {} #diccionario vacio
 
         if TOKEN_GLOBAL is None: #si hay un token global salir porque solo debe haber 1
             with TOKEN_LOCK:  # candado que asegura que solo un hilo genere el token
@@ -37,7 +37,7 @@ class CiudadSimulada(HttpUser): #HttpUser usuario virtual con peticion http
                         "password": "1234"
                     })
                     if response.status_code == 200:
-                        TOKEN_GLOBAL = response.json().get("access")
+                        TOKEN_GLOBAL = response.json().get("access") #acces tiene el token POSTMAN ej
                         print("TOKEN GENERADO OK")
                     else:
                         print("ERROR TOKEN:", response.status_code, response.text)
@@ -51,6 +51,8 @@ class CiudadSimulada(HttpUser): #HttpUser usuario virtual con peticion http
     def listar(self):
         self.client.get("/ciudades/", headers=self.headers) #client hace referencia al cliente
         #headers es propio del get header: cabeceras personalizadas como ej tokens
+
+    #------------------------------------------------------------------------------
 
     #metodo para generar nombre aleatorio
     def nombre_valido(self, longitud=8): #8 caracteres por defecto 
@@ -97,6 +99,8 @@ class CiudadSimulada(HttpUser): #HttpUser usuario virtual con peticion http
     @task(1)
     def buscar_por_nombre(self):
         self.client.get("/ciudades/Bogot%C3%A1/", headers=self.headers)
+
+
 
 
 # --- Usuarios Locust que prueban Lugares ---
