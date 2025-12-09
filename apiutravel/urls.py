@@ -6,6 +6,7 @@ from utravel.api.lugares_api import LugaresApiLC, LugaresDetailApi
 from utravel.api.usuario_api import UsuarioApi
 from utravel.api.ciudad_api import CiudadesApi, CiudadApiDetailName, CiudadApiDetailId
 from utravel.api.tipoexperiencia_api import TExperienciaApi, TExperienciaApiDetailId, TExperienciaApiDetailName
+from utravel.api.rutas_api import RutaListCreateView, RutaRetrieveUpdateDestroyView
 
 # JWT importaciones
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -42,8 +43,12 @@ urlpatterns = [
     path('tipo_exp/<int:id>/', TExperienciaApiDetailId.as_view(), name='tipoexperiencias-details'), #Actulizar, desactivar y filtrar por id
     path('tipo_exp/<str:name>/', TExperienciaApiDetailName.as_view(), name='tipoexperiencias-names'), #filtrar por nombre 
 
-    # Rutas de RutaTuristica (CRUD)
-    path('api/utravel/', include('utravel.urls')),
+    # Rutas de RutaTuristica (CRUD) - con prefijo api/utravel/ para mantener estructura de app
+    path('api/utravel/rutas/', RutaListCreateView.as_view(), name='rutas-list-create'),
+    path('api/utravel/rutas/crear/', RutaListCreateView.as_view(), name='rutas-crear'),
+    path('api/utravel/rutas/<int:id>/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-detail'),
+    path('api/utravel/rutas/<int:id>/actualizar/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-actualizar'),
+    path('api/utravel/rutas/<int:id>/eliminar/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-eliminar'),
 
 ]
 

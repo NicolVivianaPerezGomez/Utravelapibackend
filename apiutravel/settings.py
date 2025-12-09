@@ -147,6 +147,13 @@ REST_FRAMEWORK = {
     )
 }
 
+# Apply default permissions globally so views inherit them unless overridden
+REST_FRAMEWORK.update({
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+})
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),

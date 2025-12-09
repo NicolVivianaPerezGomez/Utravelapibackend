@@ -1,16 +1,4 @@
-from django.urls import path
-from .views import (
-    listar_rutas,
-    crear_ruta,
-    obtener_ruta,
-    actualizar_ruta,
-    eliminar_ruta
-)
+# This file is no longer used.
+# All utravel API routes are now defined directly in apiutravel/urls.py
+# for consistency with the rest of the project structure (lugares_api, usuario_api, etc.).
 
-urlpatterns = [
-    path("rutas/", listar_rutas, name="listar_rutas"),
-    path("rutas/crear/", crear_ruta, name="crear_ruta"),
-    path("rutas/<int:id>/", obtener_ruta, name="obtener_ruta"),
-    path("rutas/<int:id>/actualizar/", actualizar_ruta, name="actualizar_ruta"),
-    path("rutas/<int:id>/eliminar/", eliminar_ruta, name="eliminar_ruta"),
-]
