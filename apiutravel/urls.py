@@ -43,7 +43,7 @@ urlpatterns = [
     path('tipo_exp/<int:id>/', TExperienciaApiDetailId.as_view(), name='tipoexperiencias-details'), #Actulizar, desactivar y filtrar por id
     path('tipo_exp/<str:name>/', TExperienciaApiDetailName.as_view(), name='tipoexperiencias-names'), #filtrar por nombre 
 
-    # Rutas de RutaTuristica (CRUD) - con prefijo api/utravel/ para mantener estructura de app
+    # Rutas de RutaTuristica
     path('api/utravel/rutas/', RutaListCreateView.as_view(), name='rutas-list-create'),
     path('api/utravel/rutas/crear/', RutaListCreateView.as_view(), name='rutas-crear'),
     path('api/utravel/rutas/<int:id>/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-detail'),
@@ -51,7 +51,6 @@ urlpatterns = [
     path('api/utravel/rutas/<int:id>/eliminar/', RutaRetrieveUpdateDestroyView.as_view(), name='rutas-eliminar'),
 
 ]
-
 
 #Usuario para pedir tokens
 """ {
