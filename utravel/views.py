@@ -1,8 +1,9 @@
 from django.shortcuts import render
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, parser_classes
+from rest_framework.decorators import api_view, parser_classes, permission_classes
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from .models import RutaTuristica
@@ -10,6 +11,7 @@ from .api.serializers.serializers_rutas import RutaTuristicaSerializer
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def listar_rutas(request):
     rutas = RutaTuristica.objects.filter(rut_estado="1")
     serializer = RutaTuristicaSerializer(rutas, many=True)
@@ -18,6 +20,7 @@ def listar_rutas(request):
 
 @api_view(['GET', 'POST'])
 @parser_classes([MultiPartParser, FormParser, JSONParser])
+@permission_classes([IsAuthenticated])
 def crear_ruta(request):
 
     if request.method == 'GET':
@@ -34,6 +37,7 @@ def crear_ruta(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def obtener_ruta(request, id):
     try:
         ruta = RutaTuristica.objects.get(rut_id=id, rut_estado="1")
@@ -48,6 +52,7 @@ def obtener_ruta(request, id):
 
 @api_view(['PUT', 'PATCH'])
 @parser_classes([MultiPartParser, FormParser, JSONParser])
+@permission_classes([IsAuthenticated])
 def actualizar_ruta(request, id):
     try:
         ruta = RutaTuristica.objects.get(rut_id=id, rut_estado="1")
@@ -65,6 +70,7 @@ def actualizar_ruta(request, id):
 
 
 @api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def eliminar_ruta(request, id):
     try:
         ruta = RutaTuristica.objects.get(rut_id=id, rut_estado="1")
