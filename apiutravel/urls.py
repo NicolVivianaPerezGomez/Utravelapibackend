@@ -7,7 +7,7 @@ from utravel.api.usuario_api import UsuarioApi
 from utravel.api.ciudad_api import CiudadesApi, CiudadApiDetailName, CiudadApiDetailId
 from utravel.api.tipoexperiencia_api import TExperienciaApi, TExperienciaApiDetailId, TExperienciaApiDetailName
 
-#JWT importaciones
+# JWT importaciones
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 # Media
@@ -17,8 +17,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
 
-    #JWT
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'), #Pedir tokens 
+    # JWT routes
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     #Admin
@@ -42,12 +42,11 @@ urlpatterns = [
     path('tipo_exp/<int:id>/', TExperienciaApiDetailId.as_view(), name='tipoexperiencias-details'), #Actulizar, desactivar y filtrar por id
     path('tipo_exp/<str:name>/', TExperienciaApiDetailName.as_view(), name='tipoexperiencias-names'), #filtrar por nombre 
 
+    # Rutas de RutaTuristica (CRUD)
+    path('api/utravel/', include('utravel.urls')),
+
 ]
 
-# Rutas adicionales 
-urlpatterns += [
-    path('api/utravel/', include('utravel.urls')),
-]
 
 #Usuario para pedir tokens
 """ {

@@ -1,7 +1,8 @@
 from django.shortcuts import render
 
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework import status
 
 from .models import RutaTuristica
@@ -16,12 +17,13 @@ def listar_rutas(request):
 
 
 @api_view(['GET', 'POST'])
+@parser_classes([MultiPartParser, FormParser, JSONParser])
 def crear_ruta(request):
 
     if request.method == 'GET':
         return Response({
             "detalle": "Este endpoint se usa para crear rutas. "
-                       "Envía un POST con rut_nombre, rut_descripcion y rut_duracion."
+                       "Envía un POST multipart/form-data con rut_nombre, rut_descripcion, rut_duracion y opcional rut_imagen."
         }, status=status.HTTP_200_OK)
 
     serializer = RutaTuristicaSerializer(data=request.data)
@@ -44,14 +46,17 @@ def obtener_ruta(request, id):
     serializer = RutaTuristicaSerializer(ruta)
     return Response(serializer.data)
 
-@api_view(['PUT'])
+@api_view(['PUT', 'PATCH'])
+@parser_classes([MultiPartParser, FormParser, JSONParser])
 def actualizar_ruta(request, id):
     try:
         ruta = RutaTuristica.objects.get(rut_id=id, rut_estado="1")
     except RutaTuristica.DoesNotExist:
         return Response({"error": "Ruta no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+    # allow partial updates with PATCH
+    partial = True if request.method == 'PATCH' else False
 
-    serializer = RutaTuristicaSerializer(ruta, data=request.data)
+    serializer = RutaTuristicaSerializer(ruta, data=request.data, partial=partial)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
