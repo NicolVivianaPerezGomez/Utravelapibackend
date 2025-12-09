@@ -1,66 +1,64 @@
-from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework import status
 
-from ..models import RutaTuristica
-from .serializers.serializers_rutas import RutaTuristicaSerializer
-
-
-class RutaListCreateView(generics.ListCreateAPIView):
-    """
-    GET: List all active rutas (rut_estado='1').
-    POST: Create a new ruta (sets rut_estado='1' by default).
-    """
-    serializer_class = RutaTuristicaSerializer
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
-
-    def get_queryset(self):
-        return RutaTuristica.objects.filter(rut_estado="1")
-
-    def get(self, request, *args, **kwargs):
-        """List all active rutas."""
-        return super().get(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        """Create a new ruta with rut_estado='1'."""
-        return super().post(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        serializer.save(rut_estado="1")
+from utravel.models import RutaTuristica
+from utravel.api.serializers.serializers_rutas import RutaTuristicaSerializer
 
 
-class RutaRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    GET: Retrieve a specific ruta by ID (rut_id).
-    PUT/PATCH: Update a ruta (full or partial update).
-    DELETE: Logically delete a ruta (sets rut_estado='0').
-    """
-    serializer_class = RutaTuristicaSerializer
-    parser_classes = [MultiPartParser, FormParser, JSONParser]
-    lookup_field = 'rut_id'
-    lookup_url_kwarg = 'id'
+class RutaListCreateView(APIView):
 
-    def get_queryset(self):
-        return RutaTuristica.objects.filter(rut_estado="1")
+    def get(self, request):
+        rutas = RutaTuristica.objects.filter(rut_estado="1")
+        serializer = RutaTuristicaSerializer(rutas, many=True)
+        return Response(serializer.data)
 
-    def get(self, request, *args, **kwargs):
-        """Retrieve a specific ruta."""
-        return super().get(request, *args, **kwargs)
+    def post(self, request):
+        serializer = RutaTuristicaSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(rut_estado="1")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, *args, **kwargs):
-        """Update a ruta (full update)."""
-        return super().put(request, *args, **kwargs)
 
-    def patch(self, request, *args, **kwargs):
-        """Partial update a ruta."""
-        return super().patch(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        """Logically delete a ruta (set rut_estado='0')."""
-        return super().delete(request, *args, **kwargs)
+class RutaRetrieveUpdateDestroyView(APIView):
 
-    def perform_destroy(self, instance):
-        """Logical delete: set rut_estado to '0' instead of removing the record."""
-        instance.rut_estado = "0"
-        instance.save()
+    lookup_field = "id" 
+
+    def get_object(self, id):
+        try:
+            return RutaTuristica.objects.get(rut_id=id, rut_estado="1")
+        except RutaTuristica.DoesNotExist:
+            return None
+
+    def get(self, request, id):
+        ruta = self.get_object(id)
+        if not ruta:
+            return Response({"error": "Ruta no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = RutaTuristicaSerializer(ruta)
+        return Response(serializer.data)
+
+    def put(self, request, id):
+        ruta = self.get_object(id)
+        if not ruta:
+            return Response({"error": "Ruta no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = RutaTuristicaSerializer(ruta, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        ruta = self.get_object(id)
+        if not ruta:
+            return Response({"error": "Ruta no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+
+        ruta.rut_estado = "0"
+        ruta.save()
+        return Response({"mensaje": "Ruta desactivada correctamente"})
+
 
