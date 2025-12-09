@@ -115,6 +115,7 @@ class Reseña(models.Model):
     res_visible = models.BooleanField(default=True)
     usu_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     lug_id = models.ForeignKey(Lugares, on_delete=models.CASCADE)
+    res_status = models.CharField(max_length=1, default="1")
 
     def __str__(self):
         return f"Reseña de {self.usu_id} en {self.lug_id}"
