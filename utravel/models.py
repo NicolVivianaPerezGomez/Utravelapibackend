@@ -95,6 +95,8 @@ class RutaTuristica(models.Model):
     rut_duracion = models.CharField(max_length=100)
     rut_estado = models.CharField(max_length=1, default="1")
     rut_imagen = models.ImageField(upload_to='rutas/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     def __str__(self):
         return self.rut_nombre
