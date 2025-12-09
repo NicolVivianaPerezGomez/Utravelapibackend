@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 """
 Django settings for apiutravel project.
 
@@ -138,15 +140,21 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# REST framework auth using SimpleJWT
 REST_FRAMEWORK = {
-
     'DEFAULT_AUTHENTICATION_CLASSES': (
-     
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
+# Apply default permissions globally so views inherit them unless overridden
+REST_FRAMEWORK.update({
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+})
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Token de acceso dura 60 minutos
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Refresh token dura 7 días
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }

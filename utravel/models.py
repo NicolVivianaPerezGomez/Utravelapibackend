@@ -69,7 +69,7 @@ class Lugares(models.Model):
     lug_latitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     lug_longitud = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
     lug_status = models.CharField(max_length=1, default="1")
-    lug_imagen = models.ImageField(upload_to='lugares/', null=True, blank=True)
+    # lug_imagen = models.ImageField(upload_to='lugares/', null=True, blank=True)  # Temporarily commented
     catlug_id = models.ForeignKey(CategoriaLugar, on_delete=models.CASCADE)
     ciu_id = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
     
@@ -93,7 +93,8 @@ class RutaTuristica(models.Model):
     rut_nombre = models.CharField(max_length=150)
     rut_descripcion = models.TextField()
     rut_duracion = models.CharField(max_length=100)
-    rut_estado = models.CharField(max_length=1, default="1") 
+    rut_estado = models.CharField(max_length=1, default="1")
+    rut_imagen = models.ImageField(upload_to='rutas/', null=True, blank=True)
 
     def __str__(self):
         return self.rut_nombre

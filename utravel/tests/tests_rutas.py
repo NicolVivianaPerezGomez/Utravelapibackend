@@ -1,7 +1,10 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
+from io import BytesIO
 
-from .models import RutaTuristica
+from ..models import RutaTuristica
 
 
 class RutaAPITestCase(TestCase):
@@ -59,3 +62,33 @@ class RutaAPITestCase(TestCase):
 		res4 = self.client.get(self.list_url)
 		names = [r['rut_nombre'] for r in res4.json()]
 		self.assertNotIn('R1new', names)
+
+	def test_create_with_image(self):
+		"""Test creating a ruta with an image file (multipart/form-data)"""
+		# Create a small test image in memory
+		img = Image.new('RGB', (100, 100), color='blue')
+		img_io = BytesIO()
+		img.save(img_io, format='PNG')
+		img_io.seek(0)
+		
+		image_file = SimpleUploadedFile(
+			"test_image.png",
+			img_io.getvalue(),
+			content_type="image/png"
+		)
+		
+		payload = {
+			'rut_nombre': 'Ruta Con Imagen',
+			'rut_descripcion': 'Descripción con imagen',
+			'rut_duracion': '2h',
+			'rut_imagen': image_file
+		}
+		
+		res = self.client.post(self.create_url, payload, format='multipart')
+		self.assertEqual(res.status_code, 201)
+		
+		# Verify the ruta was created with image
+		data = res.json()
+		self.assertEqual(data['rut_nombre'], 'Ruta Con Imagen')
+		self.assertIsNotNone(data['rut_imagen'])
+		self.assertTrue(data['rut_imagen'].endswith('.png'))
