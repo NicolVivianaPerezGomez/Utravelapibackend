@@ -1,7 +1,8 @@
 from typing import Optional, List
 from utravel.models import Usuario, Ciudad, TipoUsuario
 from utravel.repository.usuario_repository import UsuarioRepository
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password,check_password
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UsuarioService:
 
@@ -32,6 +33,31 @@ class UsuarioService:
         # Crear usuario usando el repo
         return self.repo.create(**data)
     
+    #LOGIN
+    # Método login
+    def login(self, correo: str, contraseña: str):
+        usuario = self.repo.get_by_correo(correo)
+        if not usuario:
+            raise ValueError("Usuario no existe")
+
+        # Validar contraseña
+        if not check_password(contraseña, usuario.usu_contraseña):
+            raise ValueError("Contraseña incorrecta")
+
+        # Crear un wrapper temporal para que Simple JWT vea un "id"
+        class TempUser:
+            def __init__(self, usu):
+                self.id = usu.usu_id  # Simple JWT requiere .id
+        temp_user = TempUser(usuario)
+
+        # Generar tokens con el wrapper
+        refresh = RefreshToken.for_user(temp_user)
+
+        return {
+            "refresh": str(refresh),
+            "access": str(refresh.access_token)
+        }
+    
     # Actualizar usuario
     def actualizar_usuario(self, id: int, data: dict) -> Optional[Usuario]:
         usuario = self.repo.get_by_id(id)
@@ -50,6 +76,7 @@ class UsuarioService:
     # Traer por ID
     def obtener_id(self, id: int) -> Optional[Usuario]:
         return self.repo.get_by_id(id)
+    
 
     # Traer por correo
     def obtener_por_correo(self, correo: str) -> Optional[Usuario]:

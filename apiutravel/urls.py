@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 # Importaciones de tus APIs
+from utravel.api.login_api import LoginApi
 from utravel.api.lugares_api import LugaresApiLC, LugaresDetailApi
 from utravel.api.usuario_api import UsuarioApi
 from utravel.api.ciudad_api import CiudadesApi, CiudadApiDetailName, CiudadApiDetailId
@@ -33,6 +34,7 @@ urlpatterns = [
     # Rutas ussuarios
     path('usuarios/', UsuarioApi.as_view(), name='usuarios-list-create'),
     path('usuarios/<int:id>/', UsuarioApi.as_view(), name='usuarios-detail'),
+    path("api/login/", LoginApi.as_view(), name="login"),
 
     #Rutas de ciudades
     path('ciudades/', CiudadesApi.as_view(), name='ciudades-all-create'), #listar y crear
