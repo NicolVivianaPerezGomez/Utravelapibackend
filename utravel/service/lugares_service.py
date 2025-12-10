@@ -12,7 +12,8 @@ class LugaresServices:
     """ 2.Consultas tipo read (retorno de datos) """
     # Retornar todos los lugares
     def list_lugares(self) -> QuerySet[Lugares]:
-        return self.repository.listLugares()
+        return self.repository.listLugares().filter(lug_status="1").select_related('catlug_id', 'ciu_id')
+
     
     # Retornar por id
     def get_lugares_id(self, id:int) -> Optional[Lugares]:

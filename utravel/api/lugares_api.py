@@ -15,9 +15,11 @@ class LugaresApiLC(APIView):
     service = LugaresServices()
 
     def get(self, request):
-        lugares = self.service.list_lugares()
+    # Trae todos los lugares activos con relaciones cargadas
+        lugares = self.service.list_lugares().select_related('catlug_id', 'ciu_id')
         serializer = LugaresSerializer(lugares, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
     def post(self, request):
         serializer = LugaresSerializer(data=request.data)

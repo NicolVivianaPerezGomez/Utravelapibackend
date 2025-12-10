@@ -1,22 +1,11 @@
 from rest_framework import serializers
-from utravel.models import CategoriaLugar, Ciudad, Lugares
+from utravel.models import Lugares
 
 class LugaresSerializer(serializers.ModelSerializer):
+    categoria = serializers.CharField(source='catlug_id.catlug_descripcion', read_only=True)
+    ciudad = serializers.CharField(source='ciu_id.ciu_descripcion', read_only=True)
+    lug_imagen = serializers.ImageField(required=False, allow_null=True)
 
-    
-    catlug_id = serializers.PrimaryKeyRelatedField(
-        queryset=CategoriaLugar.objects.all(),
-    )
-
-    ciu_id = serializers.PrimaryKeyRelatedField(
-        queryset=Ciudad.objects.all()
-    )
-
-    lug_imagen = serializers.ImageField(
-        required=False, allow_null=True
-    )
-
-    """ Campos que nececito """
     class Meta:
         model = Lugares
         fields = [
@@ -27,7 +16,9 @@ class LugaresSerializer(serializers.ModelSerializer):
             "lug_latitud",
             "lug_longitud",
             "lug_status",
-            "catlug_id",
-            "ciu_id", 
-            "lug_imagen",  
+            "categoria",
+            "ciudad",
+            "lug_imagen",
         ]
+
+
