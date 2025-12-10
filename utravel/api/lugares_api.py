@@ -17,22 +17,20 @@ class LugaresApiLC(APIView):
     def get(self, request):
     # Trae todos los lugares activos con relaciones cargadas
         lugares = self.service.list_lugares().select_related('catlug_id', 'ciu_id')
-        serializer = LugaresSerializer(lugares, many=True)
+        serializer = LugaresSerializer(lugares, many=True, context={'request': request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
     def post(self, request):
-        serializer = LugaresSerializer(data=request.data)
+        serializer = LugaresSerializer(data=request.data, context={'request': request})
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        # Guarda imagen
         lugar = serializer.save()
 
-        out_serializer = LugaresSerializer(lugar)
+        out_serializer = LugaresSerializer(lugar, context={'request': request})
         return Response(out_serializer.data, status=status.HTTP_201_CREATED)
-
 
 class LugaresDetailApi(APIView):
     permission_classes = [IsAuthenticated]
