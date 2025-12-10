@@ -100,6 +100,7 @@ class CiudadSimulada(HttpUser): #HttpUser usuario virtual con peticion http
     def buscar_por_nombre(self):
         self.client.get("/ciudades/Bogot%C3%A1/", headers=self.headers)
 
+<<<<<<< HEAD
 
 
 
@@ -239,33 +240,17 @@ class TipoExperienciaUser(HttpUser):
         self.client.get("/tipo_exp/Aventura/", headers=self.headers)
 
 
+=======
+>>>>>>> a70c921cf25152ae95272aa7bda3aad9ecd2a9f3
 """
 CÓMO EJECUTAR LAS PRUEBAS DE CARGA CON LOCUST:
 
-1. Abre dos terminales en PowerShell
+1. Abrir dos terminales en PowerShell
 
 Terminal 1 - Ejecutar servidor Django:
     & ".envs\\Scripts\\python.exe" manage.py runserver
 
 Terminal 2 - Ejecutar Locust:
-    & ".envs\\Scripts\\python.exe" -m locust -f utravel/test_performance/locustfile.py --host=http://127.0.0.1:8000
+    & ".envs\\Scripts\\python.exe" locust -f locustfile.py --host=http://127.0.0.1:8000
 
-2. Abre en tu navegador:
-    http://localhost:8089/
-
-3. En la interfaz de Locust configura:
-    - Number of users: 50-100
-    - Spawn rate: 5-10
-    - Luego presiona "Start swarming"
-
-4. Observa las métricas en tiempo real:
-    - Response times (tiempo de respuesta promedio)
-    - RPS (Requests Per Second)
-    - Failures (errores)
-    - Charts (gráficos de rendimiento)
-
-COMPARACIÓN CON TESTS UNITARIOS:
-- Tests Unitarios (pytest/Django TestCase): Verifican CORRECCIÓN (¿funciona?)
-- Locust: Verifica RENDIMIENTO bajo CONCURRENCIA (¿aguanta muchos usuarios?)
-- Juntos: Tests = Calidad, Locust = Escalabilidad
 """
