@@ -21,7 +21,7 @@ class CiudadRepository:
         
         #si se encuentra
         for field, value in data.items():
-            setattr(ciudad_object, field, value)
+            setattr(ciudad_object, field, value) #asignar campos dinamicamente del diccionario
         
         #salvar y retornar
         ciudad_object.save() #guarda los cambios del objeto en la bd
@@ -30,7 +30,7 @@ class CiudadRepository:
     #eliminar lógico ciudad
     def desactivate(self, id:int) -> bool:
         deleted = Ciudad.objects.filter(pk=id).update(ciudad_status="0")
-        return deleted > 0 #retorna True o False si un registro fue actualizado por eso > 0
+        return deleted > 0 #retorna True o False si algun registro fue actualizado por eso > 0 
     
     #listar todas las ciudades
     def listCiudades(self) -> QuerySet[Ciudad]:

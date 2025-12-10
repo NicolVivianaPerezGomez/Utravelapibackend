@@ -24,7 +24,7 @@ class LugaresRepository:
         
         # Si lo encuentro
         for field,value in data.items():
-            setattr(lugares_obj, field, value)
+            setattr(lugares_obj, field, value) 
 
         # Salvo valores y devuelvo el valor actualizado
         lugares_obj.save()
