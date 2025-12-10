@@ -92,7 +92,7 @@ DATABASES = {
         'OPTIONS':{
             # When using a PostgreSQL schema (search_path), include public as a fallback
             # so Django can create the django_migrations and other tables during tests.
-            'options':'-c search_path=public,api_utravel'
+            'options':'-c search_path=api_utravel,public'
         }
     }
 }
