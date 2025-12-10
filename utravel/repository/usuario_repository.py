@@ -15,26 +15,17 @@ class UsuarioRepository:
         return Usuario.objects.create(**data)
     
     #Actualizar un Usuario
-    def update (self, id:int, **data) -> Optional[Usuario]:
+    def update(self, id: int, **data) -> Optional[Usuario]:
         usuario_obj = Usuario.objects.filter(pk=id).first()
         if not usuario_obj:
             return None
         
-        """
-        data = {
-            "usu_nombre": "Sara",
-            "usu_apellido": "Quintero",
-            "usu_correo": "saraquintero@gmail.com",
-            "usu_contraseña": "sara1234",
-            "usu_usunombre":"saritaquint",
-        }
-        """
-
         for field, value in data.items():
             setattr(usuario_obj, field, value)
+        
+        usuario_obj.save() 
+        return usuario_obj
 
-            usuario_obj.save()
-            return usuario_obj
     
     #Aquí desactivo por status 
     def desactivate(self, id:int) -> bool:
@@ -50,16 +41,10 @@ class UsuarioRepository:
         )
     
 #CONSULTAS
-    #por ID
+      # Consultar por ID
     def get_by_id(self, id: int) -> Optional[Usuario]:
-        return (
-            Usuario.objects
-            .select_related("ciu_id", "tipousu_id") 
-            .filter(pk=id)
-            .first()
-        )
-    
-    #Por correo
+        return Usuario.objects.filter(pk=id).first()
+
+    # Consultar por correo
     def get_by_correo(self, correo: str) -> Optional[Usuario]:
         return Usuario.objects.filter(usu_correo=correo).first()
-    

@@ -1,6 +1,7 @@
 from typing import Optional, List
-from utravel.models import Usuario
+from utravel.models import Usuario, Ciudad, TipoUsuario
 from utravel.repository.usuario_repository import UsuarioRepository
+from django.contrib.auth.hashers import make_password
 
 class UsuarioService:
 
@@ -13,9 +14,22 @@ class UsuarioService:
         if self.repo.get_by_correo(data.get("usu_correo")):
             raise ValueError("El correo ya está registrado.")
 
-        #Valido que el nombre sea difetente a uno registrado
+        # Valido que el nombre sea diferente a uno registrado
         if self.repo.model.objects.filter(usu_usunombre=data.get("usu_usunombre")).exists():
             raise ValueError("El nombre de usuario ya existe.")
+
+        # Convertir IDs a instancias de Ciudad y TipoUsuario
+        ciudad = Ciudad.objects.get(ciu_id=data.get("ciu_id"))
+        tipo = TipoUsuario.objects.get(tipousu_id=data.get("tipousu_id"))
+
+        # Reemplazar los IDs por instancias
+        data["ciu_id"] = ciudad
+        data["tipousu_id"] = tipo
+
+        # Hashear la contraseña
+        data["usu_contraseña"] = make_password(data["usu_contraseña"])
+
+        # Crear usuario usando el repo
         return self.repo.create(**data)
     
     # Actualizar usuario
@@ -33,10 +47,10 @@ class UsuarioService:
     def listar_usuarios(self) -> List[Usuario]:
         return self.repo.listarUsuarios()
 
-    #Traer por ID
+    # Traer por ID
     def obtener_id(self, id: int) -> Optional[Usuario]:
         return self.repo.get_by_id(id)
 
-    #Traer por correo
+    # Traer por correo
     def obtener_por_correo(self, correo: str) -> Optional[Usuario]:
         return self.repo.get_by_correo(correo)

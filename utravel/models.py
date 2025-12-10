@@ -1,13 +1,16 @@
 from django.db import models
 
-
 class TipoUsuario(models.Model):
     tipousu_id = models.AutoField(primary_key=True)
-    tipousu_turista = models.BooleanField(default=False)
-    tipousu_empresa = models.BooleanField(default=False)
+    tipousu_turista = models.BooleanField(default=False)  # 2
+    tipousu_empresa = models.BooleanField(default=False)   # 1
 
     def __str__(self):
-        return f"TipoUsuario {self.tipousu_id}"
+        if self.tipousu_empresa:
+            return "Empresa"  # 1
+        elif self.tipousu_turista:
+            return "Turista"  # 2
+        return "Sin Tipo"
 
 
 class Ciudad(models.Model):
